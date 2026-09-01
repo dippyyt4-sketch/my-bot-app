@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Грузоперевозки</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.8;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: transform 0.2s;
+            font-weight: 600;
+        }
+        .button:active {
+            transform: scale(0.95);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .back-button {
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚚 Грузоперевозки</h1>
+            <p>Управление заказами и профитом</p>
+        </div>
+        
+        <!-- Главное меню -->
+        <div id="mainMenu">
+            <div class="card">
+                <h2>⚡ Быстрые действия</h2>
+                <button class="button" onclick="showNewOrder()">📝 Новая заявка</button>
+                <button class="button" onclick="showOrders()">📋 Мои заявки</button>
+                <button class="button" onclick="showStats()">📊 Статистика</button>
+            </div>
+        </div>
+        
+        <!-- Форма новой заявки -->
+        <div id="newOrderForm" class="hidden">
+            <button class="back-button" onclick="showMain()">← Назад</button>
+            <div class="card">
+                <h2>📝 Новая заявка</h2>
+                <div class="form-group">
+                    <label>Имя заказчика</label>
+                    <input type="text" id="customerName" placeholder="Введите имя">
+                </div>
+                <div class="form-group">
+                    <label>Адрес локации</label>
+                    <input type="text" id="address" placeholder="Введите адрес">
+                </div>
+                <div class="form-group">
+                    <label>Ближайшее метро</label>
+                    <input type="text" id="metro" placeholder="Введите метро">
+                </div>
+                <div class="form-group">
+                    <label>Описание работы</label>
+                    <textarea id="workDescription" rows="3" placeholder="Что нужно сделать?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Оплата заказчика (руб.)</label>
+                    <input type="number" id="customerPayment" placeholder="Сколько заплатит?">
+                </div>
+                <div class="form-group">
+                    <label>Количество грузчиков</label>
+                    <input type="number" id="workersCount" placeholder="Сколько грузчиков?">
+                </div>
+                <div class="form-group">
+                    <label>Оплата грузчикам (руб.)</label>
+                    <input type="number" id="workersPayment" placeholder="Сколько отдать?">
+                </div>
+                <button class="button" onclick="submitOrder()">✅ Создать заявку</button>
+            </div>
+        </div>
+        
+        <!-- Список заявок -->
+        <div id="ordersList" class="hidden">
+            <button class="back-button" onclick="showMain()">← Назад</button>
+            <div class="card">
+                <h2>📋 Мои заявки</h2>
+                <div id="ordersContent">Загрузка...</div>
+            </div>
+        </div>
+        
+        <!-- Статистика -->
+        <div id="statsView" class="hidden">
+            <button class="back-button" onclick="showMain()">← Назад</button>
+            <div class="card">
+                <h2>📊 Статистика</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Всего заказов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalProfit">0₽</div>
+                        <div class="stat-label">Профит</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+        
+        function showMain() {
+            document.getElementById('mainMenu').classList.remove('hidden');
+            document.getElementById('newOrderForm').classList.add('hidden');
+            document.getElementById('ordersList').classList.add('hidden');
+            document.getElementById('statsView').classList.add('hidden');
+        }
+        
+        function showNewOrder() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('newOrderForm').classList.remove('hidden');
+            document.getElementById('ordersList').classList.add('hidden');
+            document.getElementById('statsView').classList.add('hidden');
+        }
+        
+        function showOrders() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('newOrderForm').classList.add('hidden');
+            document.getElementById('ordersList').classList.remove('hidden');
+            document.getElementById('statsView').classList.add('hidden');
+            loadOrders();
+        }
+        
+        function showStats() {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('newOrderForm').classList.add('hidden');
+            document.getElementById('ordersList').classList.add('hidden');
+            document.getElementById('statsView').classList.remove('hidden');
+            Telegram.WebApp.sendData('get_stats');
+        }
+        
+        function submitOrder() {
+            const orderData = {
+                customer_name: document.getElementById('customerName').value,
+                address: document.getElementById('address').value,
+                metro: document.getElementById('metro').value,
+                work_description: document.getElementById('workDescription').value,
+                customer_payment: document.getElementById('customerPayment').value,
+                workers_count: document.getElementById('workersCount').value,
+                workers_payment: document.getElementById('workersPayment').value
+            };
+            
+            Telegram.WebApp.sendData(JSON.stringify(orderData));
+            Telegram.WebApp.close();
+        }
+        
+        function loadOrders() {
+            Telegram.WebApp.sendData('get_orders');
+        }
+    </script>
+</body>
+</html>
