@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Грузоперевозки</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            background: #2196F3;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚚 Грузоперевозки</h1>
+        <p>Управление заказами</p>
+    </div>
+    
+    <button class="button" onclick="Telegram.WebApp.sendData('new_order')">📝 Новая заявка</button>
+    <button class="button" onclick="Telegram.WebApp.sendData('view_orders')">📋 Мои заявки</button>
+    <button class="button" onclick="Telegram.WebApp.sendData('view_stats')">📊 Статистика</button>
+    
+    <script>
+        Telegram.WebApp.ready();
+    </script>
+</body>
+</html>
