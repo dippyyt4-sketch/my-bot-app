@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Грузоперевозки Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚚 Новая заявка</h1>
+    </div>
+    
+    <div class="card">
+        <input type="text" id="customerName" placeholder="👤 Заказчик">
+        <input type="text" id="address" placeholder="📍 Адрес">
+        <input type="text" id="metro" placeholder="🚇 Метро">
+        <input type="date" id="executionDate">
+        <input type="time" id="executionTime">
+        <textarea id="workDescription" rows="3" placeholder="📝 Что нужно сделать?"></textarea>
+        <input type="number" id="customerPayment" placeholder="💰 Оплата заказчика (руб.)">
+        <input type="number" id="workersCount" placeholder="👥 Количество грузчиков">
+        <input type="number" id="workersPayment" placeholder="💵 Оплата грузчикам (руб.)">
+        <button onclick="submitOrder()">✅ Отправить заявку</button>
+    </div>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        function submitOrder() {
+            const text = 
+                "📋 НОВАЯ ЗАЯВКА\n" +
+                "━━━━━━━━━━━━━━━━━\n" +
+                "👤 Заказчик: " + document.getElementById('customerName').value + "\n" +
+                "📍 Адрес: " + document.getElementById('address').value + "\n" +
+                "🚇 Метро: " + document.getElementById('metro').value + "\n" +
+                "📅 Дата: " + document.getElementById('executionDate').value + "\n" +
+                "⏰ Время: " + document.getElementById('executionTime').value + "\n" +
+                "📝 Задача: " + document.getElementById('workDescription').value + "\n" +
+                "💰 Оплата заказчика: " + document.getElementById('customerPayment').value + " руб.\n" +
+                "👥 Грузчиков: " + document.getElementById('workersCount').value + "\n" +
+                "💵 Оплата грузчикам: " + document.getElementById('workersPayment').value + " руб.";
+            
+            Telegram.WebApp.sendData(text);
+            Telegram.WebApp.close();
+        }
+    </script>
+</body>
+</html>
