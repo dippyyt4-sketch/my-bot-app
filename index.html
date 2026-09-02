@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Грузоперевозки</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        button { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚚 Новая заявка</h1>
+    </div>
+    
+    <div class="card">
+        <label>👤 Заказчик</label>
+        <input type="text" id="customerName">
+        
+        <label>📍 Адрес</label>
+        <input type="text" id="address">
+        
+        <label>🚇 Метро</label>
+        <input type="text" id="metro">
+        
+        <label>📅 Дата</label>
+        <input type="date" id="executionDate">
+        
+        <label>⏰ Время</label>
+        <input type="time" id="executionTime">
+        
+        <label>📝 Задача</label>
+        <textarea id="workDescription" rows="3"></textarea>
+        
+        <label>💰 Оплата заказчика (руб.)</label>
+        <input type="number" id="customerPayment">
+        
+        <label>👥 Грузчиков</label>
+        <input type="number" id="workersCount">
+        
+        <label>💵 Оплата грузчикам (руб.)</label>
+        <input type="number" id="workersPayment">
+        
+        <button onclick="sendOrder()">✅ Отправить</button>
+    </div>
+    
+    <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+        
+        function sendOrder() {
+            const data = {
+                customer: document.getElementById('customerName').value,
+                address: document.getElementById('address').value,
+                metro: document.getElementById('metro').value,
+                date: document.getElementById('executionDate').value,
+                time: document.getElementById('executionTime').value,
+                task: document.getElementById('workDescription').value,
+                payment: document.getElementById('customerPayment').value,
+                workers: document.getElementById('workersCount').value,
+                workers_pay: document.getElementById('workersPayment').value
+            };
+            
+            Telegram.WebApp.sendData(JSON.stringify(data));
+            Telegram.WebApp.close();
+        }
+    </script>
+</body>
+</html>
